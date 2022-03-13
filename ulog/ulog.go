@@ -38,6 +38,7 @@ func (l *ULog) SendToTelegram(text string) {
 	r := bytes.NewReader(data)
 	_, err := http.Post(l.tlgBotUrl, "application/json", r)
 	if err != nil {
+		l.Fatal(err.Error())
 	}
 }
 
