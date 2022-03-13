@@ -1,18 +1,44 @@
 package ulog
 
 import (
+	"bytes"
+	"fmt"
 	"log"
+	"net/http"
 	"os"
 )
 
 type ULog struct {
-	logLevel int
-	logFile  string
+	logLevel   int
+	logFile    string
+	tlgBotUrl  string
+	tlgGroupId string
 }
 
 func New(logFile string) *ULog {
 	return &ULog{logLevel: 0,
 		logFile: logFile}
+}
+
+func (l *ULog) InitTlgBot(botToken, groupId string) {
+	l.tlgBotUrl = fmt.Sprintf("https://api.telegram.org/bot%v/sendMessage", botToken)
+	l.tlgGroupId = groupId
+}
+
+func (l *ULog) SendToTelegram(text string) {
+	type postData struct {
+		ChatId string `json:"chat_id"`
+		Text   string `json:"text"`
+	}
+	x := postData{
+		ChatId: l.tlgGroupId,
+		Text:   text,
+	}
+	data := []byte(fmt.Sprintf("%v", x))
+	r := bytes.NewReader(data)
+	_, err := http.Post(l.tlgBotUrl, "application/json", r)
+	if err != nil {
+	}
 }
 
 func (l *ULog) SetLogLevel(logLevel int) {
