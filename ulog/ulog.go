@@ -16,7 +16,7 @@ type ULog struct {
 func New(logFile string) *ULog {
 	uLog := &ULog{logFile: logFile}
 	uLog.SetLogLevel(loglevel.Debug)
-	ulog.init()
+	uLog.init()
 	return uLog
 }
 
