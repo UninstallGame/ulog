@@ -16,6 +16,7 @@ type ULog struct {
 func New(logFile string) *ULog {
 	uLog := &ULog{logFile: logFile}
 	uLog.SetLogLevel(loglevel.Debug)
+	ulog.init()
 	return uLog
 }
 
@@ -55,7 +56,7 @@ func (l *ULog) Fatal(text string, err error) {
 	l.logger.Println(fmt.Sprintf("[FATAL] %v. Error: %v", text, err.Error()))
 }
 
-func (l *ULog) log() {
+func (l *ULog) init() {
 	f, err := os.OpenFile(l.logFile,
 		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
