@@ -9,14 +9,13 @@ import (
 
 type ULog struct {
 	logLevel int
-	logFile  string
 	logger   *log.Logger
 }
 
 func New(logFile string) *ULog {
-	uLog := &ULog{logFile: logFile}
+	uLog := &ULog{}
 	uLog.SetLogLevel(loglevel.Debug)
-	uLog.init()
+	uLog.init(logFile)
 	return uLog
 }
 
@@ -56,16 +55,12 @@ func (l *ULog) Fatal(text string, err error) {
 	l.logger.Println(fmt.Sprintf("[FATAL] %v. Error: %v", text, err.Error()))
 }
 
-func (l *ULog) init() {
-	f, err := os.OpenFile(l.logFile,
+func (l *ULog) init(logFile string) {
+	f, err := os.OpenFile(logFile,
 		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Println(err)
 	}
 
 	l.logger = log.New(f, "", log.LstdFlags)
-	err = f.Close()
-	if err != nil {
-		l.Fatal("Close the log file", err)
-	}
 }
